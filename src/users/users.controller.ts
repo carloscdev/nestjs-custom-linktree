@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -20,19 +24,26 @@ export class UsersController {
     return this.usersService.register(createUserDto);
   }
 
+  @Post('/login')
+  login(@Body() loginUserDto: LoginUserDto) {
+    return this.usersService.login(loginUserDto);
+  }
+
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
-  @Get('/profile/:username')
+  @Get('/public/:username')
   findOne(@Param('username') username: string) {
     return this.usersService.findOne(username);
   }
 
-  @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.usersService.findById(id);
+  @Get('/account')
+  @UseGuards(AuthGuard())
+  findById(@Request() req) {
+    const user = req.user;
+    return this.usersService.findById(user.id);
   }
 
   @Patch('/is-active/:id')

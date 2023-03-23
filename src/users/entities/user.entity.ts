@@ -5,9 +5,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToOne,
 } from 'typeorm';
-import { UserRole } from '../internfaces/user.interface';
+import { UserRole } from '../interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
+import { Profile } from 'src/profiles/entities/profile.entity';
 
 @Entity()
 export class User {
@@ -45,6 +47,9 @@ export class User {
   })
   isDeleted: boolean;
 
+  @OneToOne(() => Profile, (profile) => profile.user)
+  profile: Profile;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -54,5 +59,10 @@ export class User {
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  @BeforeInsert()
+  checkFields() {
+    this.email = this.email.toLowerCase().trim();
   }
 }

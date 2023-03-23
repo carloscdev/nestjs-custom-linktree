@@ -2,14 +2,21 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Profile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  user: User;
 
   @Column('text')
   name: string;
