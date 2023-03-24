@@ -150,7 +150,7 @@ export class UsersService {
 
   async delete(id: string) {
     const user = await this.userRepository.findOne({
-      where: { id, isActive: true, isDeleted: false },
+      where: { id, isDeleted: false },
     });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -163,7 +163,7 @@ export class UsersService {
 
     await this.userRepository.save(user);
     return {
-      statusCode: '200',
+      statusCode: 200,
       message: 'User deleted successfully',
     };
   }

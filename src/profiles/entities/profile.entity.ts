@@ -14,8 +14,11 @@ export class Profile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User)
-  @JoinColumn()
+  @Column('text')
+  userId: string;
+
+  @OneToOne(() => User, (user) => user.profile)
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @Column('text')

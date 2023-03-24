@@ -17,10 +17,12 @@ export class ProfilesService {
     private readonly profileRepository: Repository<Profile>,
   ) {}
 
-  async findById(id: string) {
+  async findOne(userId: string) {
     try {
+      console.log(userId, 'USUARIO');
       const profile = await this.profileRepository.findOne({
-        where: { id },
+        where: { userId },
+        // relations: ['user'],
       });
 
       if (!profile) {
@@ -30,6 +32,8 @@ export class ProfilesService {
       delete profile['id'];
       delete profile['createdAt'];
       delete profile['updatedAt'];
+      delete profile['userId'];
+      delete profile['user'];
       return profile;
     } catch (error) {
       this.logger.error(error);
@@ -42,8 +46,32 @@ export class ProfilesService {
     }
   }
 
-  async update(id: string, updateProfileDto: UpdateProfileDto) {
-    await this.profileRepository.update(id, updateProfileDto);
-    return await this.findById(id);
+  async update(userId: string, updateProfileDto: UpdateProfileDto) {
+    const profile = await this.profileRepository.findOne({
+      where: { userId },
+      // relations: ['user'],
+    });
+    const {
+      name,
+      description,
+      banner,
+      image,
+      favicon,
+      bgColor,
+      textColor,
+      itemColor,
+    } = updateProfileDto;
+
+    profile['name'] = name;
+    profile['description'] = description;
+    profile['banner'] = banner;
+    profile['image'] = image;
+    profile['favicon'] = favicon;
+    profile['bgColor'] = bgColor;
+    profile['textColor'] = textColor;
+    profile['itemColor'] = itemColor;
+    await this.profileRepository.save(profile);
+
+    return profile;
   }
 }
