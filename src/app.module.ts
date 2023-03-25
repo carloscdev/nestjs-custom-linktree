@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { ItemsModule } from './items/items.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProfilesModule } from './profiles/profiles.module';
     // Resources
     UsersModule,
     ProfilesModule,
+    ItemsModule,
   ],
   controllers: [],
   providers: [],

@@ -6,10 +6,12 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { UserRole } from '../interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
 import { Profile } from 'src/profiles/entities/profile.entity';
+import { Item } from 'src/items/entities/item.entity';
 
 @Entity()
 export class User {
@@ -49,6 +51,9 @@ export class User {
 
   @OneToOne(() => Profile, (profile) => profile.user)
   profile: Profile;
+
+  @OneToMany(() => Item, (item) => item.user)
+  items: Item[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -19,7 +19,6 @@ export class ProfilesService {
 
   async findOne(userId: string) {
     try {
-      console.log(userId, 'USUARIO');
       const profile = await this.profileRepository.findOne({
         where: { userId },
         // relations: ['user'],
@@ -51,6 +50,11 @@ export class ProfilesService {
       where: { userId },
       // relations: ['user'],
     });
+
+    if (!profile) {
+      throw new NotFoundException('Profile not found');
+    }
+
     const {
       name,
       description,
